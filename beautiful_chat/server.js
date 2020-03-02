@@ -8,8 +8,12 @@ const path = require('path')
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', (req, res) => {
-	res.sendFile(path.join(__dirname, 'public/index.html'))
+	res.send(`<h1>You are in home page</h1>`)
 })
+
+// app.get('/chat', (req, res) => {
+// 	res.sendFile(path.join(__dirname, 'public/index.html'))
+// })
 
 io.on('connection', socket => {
 	console.log('a user connected')
