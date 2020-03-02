@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Login</title>
+</head>
+<body>
+	<div id="appContainer" class="flex-column">
+		<header>
+			<div class='container flex-column flex-left'>
+				<h1>Quick Chat</h1>
+				<p class='light-text'>The easiest way to get your message across</p>
+			</div>
+		</header>
+		
+		<div id="mainContent" class='container flex-grow-1 flex-column'>
+			<section id="login" class=''>
+				<h1 class="text-center">Wellcome</h1>
+				<h1 class='text-center'>to the Main Page</h1>
+				<br><br>
+				<% if(userId){ %>
+					<a href="/chat"><button>Chat</button></a>
+					<form action="/logout" method='post'>
+						<button style='background-color: blue;'>Logout</button>
+					</form>
+			 		<% } else{ %>  
+			   			<a href="/login"><button>Login</button></a>
+						<a href="/register"><button style='background-color: blue;'>Register</button></a>
+				<% } %>				
+
+			</section>
+		</div>
+	</div>
+	<style>
+		/* Variables */
+		:root {
+			--primary-blue: #2196f3;
+			--dark-blue: #1976d2;
+			--light-blue: #bbdefb;
+			--white: #ffffff;
+			--primary-text: #212121;
+			--secondary-text: #757575;
+			--light-gray: #bdbdbd;
+		}
+
+		/* Reset */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: Helvetica, sans-serif;
+			color: var(--pramary-text);
+		}
+
+		/* Helper Functions */
+		.flex {
+			display: flex;
+		}
+
+		.flex-left {
+			justify-content: center;
+			align-items: left;
+		}
+
+		.flex-center {
+			justify-content: center;
+			align-items: center;
+		}
+
+		.flex-column {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.flex-grow-1 {
+			flex-grow: 1;
+		}
+
+		.hidden {
+			display: none;
+		}
+
+		.mb-2 {
+			margin-bottom: 20px;
+		}
+
+		.container {
+			max-width: 600px;
+			margin: 0 auto;
+		}
+
+		/* Text Classes */
+		.light-text {
+			color: var(--light-blue);
+		}
+
+		.text-center {
+			text-align: center;
+		}
+
+		h1 {
+			font-size: 48px;
+			font-weight: 300;
+		}
+
+		/* header */
+		header {
+			height: 150px;
+			background-color: var(--dark-blue);
+			width: 100%;
+			color: white;
+		}
+
+		header .container {
+			height: 100%;
+			align-items: left;
+		}
+
+		#appContainer {
+			height: 100vh;
+			width: 100vw;
+			background-color: var(--primary-blue)
+		}
+
+		#mainContent {
+			justify-content: center;
+			width: 100%;
+		}
+
+		/* lOgin form */
+		#login {
+			background: #FFF8DC;
+			padding: 40px 100px;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+			margin-top: -100px;
+		}
+
+
+		button {
+		  width: 100%;
+		  background-color: #4CAF50; /* Green */
+		  border: none;
+		  color: white;
+		  padding: 15px 32px;
+		  text-align: center;
+		  text-decoration: none;
+		  display: inline-block;
+		  font-size: 16px;
+		}
+	</style>
+	
+<!-- 	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript" src="app.js"></script> -->
+</body>
+</html>

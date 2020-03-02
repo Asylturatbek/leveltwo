@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Quick Chat</title>
+</head>
+<body>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script>
+  		$(function () {
+		    var socket = io();
+		    const logmess = {
+		    	author: "<%= user.name %>" ,
+		    	type: 'login'
+		    }
+		    socket.emit('message', logmess );
+		    $('form').submit(function(e){
+		      	e.preventDefault(); // prevents page reloading
+		      	const date = new Date();
+				const day = date.getDate();
+				const year = date.getFullYear()
+				const month = ('0'+(date.getMonth() +1)).slice(-2);
+				const dateString = `${month}/${day}/${year}`
+				
+				const message = {
+					author: "<%= user.name %>" ,
+					date: dateString,
+					content: $('#messageInput').val()
+				}
+			    socket.emit('message', message);
+			    $('#messageInput').val('');
+			    return false;
+		    });
+		    socket.on('message', function(message){
+		    	if(message.type == 'login'){
+		    		$('#messagesList').append(`
+		    			<p class="secondary-text text-center mb-2">${message.author} has joined the chat</p>
+		    		`)
+		    	} else {
+		    		if (message.author !== "<%= user.name %>") {
+					    message.type = 'message-left';
+					} else {
+					    message.type = 'message-right';
+					    message.author = 'You'
+					}
+			   		
+			   		$('#messagesList').append(` 
+					<div class="message ${message.type}">
+						<div id="message-details" class='flex'>
+							<p class="message-author"> ${message.author} </p>
+							<p class="message-date">${message.date}</p>
+						</div>
+						<p class="message-content">${message.content}</p>
+					</div>
+			  		`)		    		
+		    	}
+
+			   const chatWindow = document.getElementById('chat')
+			   chatWindow.scrollTop = chatWindow.scrollHeight;
+			});
+		});
+	</script>
+	<div id="appContainer" class="flex-column">
+		<header>
+			<div class='container flex-column flex-left'>
+				<h1>Quick Chat</h1>
+				<p class='light-text'>The easiest way to get your message across. <strong style="color: gold">Have a great day: "<%=user.name%>"</strong></p>
+				<a href="/"><button style='background-color: #708090; width: 100%; padding: 15px 32px;'>Main Page</button></a>
+			</div>
+		</header>
+		
+		<div id="mainContent" class='container flex-grow-1 flex-column'>
+			<section id="chat" class='flex-grow-1 flex-column'>
+				<div id="messagesList" class='flex-grow-1'>
+
+				</div>
+				<form id="messageForm" class='flex mb-2'>
+					<input type="text" name="message" class='flex-grow-1' id="messageInput" placeholder="enter the message">
+					<button id="sendBtn">Send</button>
+				</form>
+			</section>
+		</div>
+	</div>
+	<style>
+		/* Variables */
+		:root {
+			--primary-blue: #2196f3;
+			--dark-blue: #1976d2;
+			--light-blue: #bbdefb;
+			--white: #ffffff;
+			--primary-text: #212121;
+			--secondary-text: #757575;
+			--light-gray: #bdbdbd;
+		}
+
+		/* Reset */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+
+		body {
+			font-family: Helvetica, sans-serif;
+			color: var(--pramary-text);
+		}
+
+		/* Helper Functions */
+		.flex {
+			display: flex;
+		}
+
+		.flex-left {
+			justify-content: center;
+			align-items: left;
+		}
+
+		.flex-center {
+			justify-content: center;
+			align-items: center;
+		}
+
+		.flex-column {
+			display: flex;
+			flex-direction: column;
+		}
+
+		.flex-grow-1 {
+			flex-grow: 1;
+		}
+
+		.hidden {
+			display: none;
+		}
+
+		.mb-2 {
+			margin-bottom: 20px;
+		}
+
+		.container {
+			max-width: 600px;
+			margin: 0 auto;
+		}
+
+		/* Text Classes */
+		.primary-text {
+			color: var(--primary-text);
+		}
+
+		.secondary-text {
+			color: var(--secondary-text);
+		}
+
+		.light-text {
+			color: var(--light-blue);
+		}
+
+		.text-center {
+			text-align: center;
+		}
+
+		h1 {
+			font-size: 48px;
+			font-weight: 300;
+		}
+
+		/* header */
+		header {
+			height: 150px;
+			background-color: var(--dark-blue);
+			width: 100%;
+			color: white;
+		}
+
+		header .container {
+			height: 100%;
+			align-items: left;
+		}
+
+		#appContainer {
+			height: 100vh;
+			width: 100vw;
+			background-color: var(--primary-blue)
+		}
+
+		#mainContent {
+			justify-content: center;
+			width: 100%;
+		}
+
+		/* lOgin form */
+		#login {
+			background: white;
+			padding: 40px 100px;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+			margin-top: -100px;
+		}
+
+		#loginForm {
+			margin-top: 20px;
+		}
+
+		/* form elements */
+		input {
+			height: 40px;
+			padding: 10px;
+			background-color: var(--light-blue);
+			border: none;
+			color: var(--secondary-text);
+		}
+
+		button {
+			height: 40px
+			padding: 0 15px;
+			background-color: var(--primary-blue);
+			color: white;
+		}
+
+		/* chat section */
+		#chat {
+			background: white;
+			margin: 25px;
+			padding: 25px;
+			color: white;
+			height: 400px;
+			overflow-y: scroll;
+		}
+
+		.message {
+			background-color: var(--primary-blue);
+			padding: 20px;
+			width: 80%;
+			margin-bottom: 20px;
+		}
+
+		.message-right {
+			background-color: var(--light-blue);
+			color: var(--primary-text);
+			margin-left: 20%;
+		}
+
+		#message-details {
+			margin-bottom: 5px;
+			justify-content: space-between;
+		}
+
+		.message-author {
+			font-weight: 800;
+		}
+
+		.message-date {
+			font-weight: 100;
+			font-size: 14px;
+		}
+
+		.message-content {
+			font-weight: 100;
+		}
+	</style>
+</body>
+</html>
