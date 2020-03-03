@@ -6,6 +6,39 @@ const bodyParser = require('body-parser')
 const session = require('express-session')
 const flash = require('connect-flash')
 
+var MongoDBStore = require('connect-mongodb-session')(session);
+
+const atlasmongouri = 'mongodb+srv://asyl:asyl00000@cluster0-ple4h.mongodb.net/test?retryWrites=true&w=majority'
+
+
+var store = new MongoDBStore(
+  {
+    uri: atlasmongouri,
+    databaseName: 'connect_mongodb_session_test',
+    collection: 'mySessions'
+  },
+  function(error) {
+    // Should have gotten an error
+});
+
+store.on('error', function(error) {
+  // Also get an error here
+});
+
+const mongoose = require('mongoose')
+mongoose.connect(atlasmongouri, {
+	useNewUrlParser: true,
+	useUnifiedTopology: true 
+});
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function() {
+  console.log('We are connected to db')
+});
+
+var Schema = mongoose.Schema;
+
 const TWO_HOURS = 100 * 60 * 60 *2
 console.log(TWO_HOURS)
 const {
@@ -19,12 +52,13 @@ const {
 
 const IN_PROD = NODE_ENV === 'production'
 
-// TODO: wire it up to database
-const users = [
-	{ id: 1, name: 'Alex', email: 'alex@gmail.com', password: 'secret' },
-	{ id: 2, name: 'Zenniem', email: 'zen@gmail.com', password: 'secret' },
-	{ id: 3, name: 'Menniem', email: 'men@gmail.com', password: 'secret' }
-]
+var userSchema = new Schema({
+  name:  String, // String is shorthand for {type: String}
+  email: String,
+  password:   String,
+});
+
+var Users = mongoose.model('Users', userSchema);
 
 app.use(bodyParser.urlencoded({
 	extended: true
@@ -38,6 +72,7 @@ app.use(session({
 	resave: false,
 	saveUninitialized: false,
 	secret: SESS_SECRET,
+	store: store,
 	cookie: {
 		maxAge: SESS_LIFETIME,
 		sameSite: true,
@@ -67,14 +102,19 @@ const redirectHome = (req, res, next) => {
 
 app.get('/', (req, res) => {
 	const { userId } = req.session
-	const user = users.find(user => user.id === req.session.userId)	
-
-	res.render('index', {userId, user})
+	console.log(req.session.userId)
+	Users.findOne({_id: req.session.userId}).then(user => {
+		console.log(user)
+		return res.render('index', {userId, user})
+	})
 })
 
 app.get('/chat', redirectLogin, (req, res) => {
-	const user = users.find(user => user.id === req.session.userId)
-	res.render('chat', {user})
+	console.log(req.session.userId)
+	Users.findOne({_id: req.session.userId}).then(user => {
+		console.log(user)
+		return res.render('chat', {user})
+	})
 })
 
 app.get('/login', redirectHome, (req, res) => {
@@ -89,39 +129,48 @@ app.post('/login', redirectHome, (req, res) => {
 	const { email, password } = req.body
 
 	if(email && password) {
-		const user = users.find( // TODO: hash the password
-			user => user.email === email && user.password === password
-		)
-		if(user) {
-			req.session.userId = user.id
-			return res.redirect('/chat')
-		}
+		Users.findOne({email, password}).then(user => {
+			console.log(user == null)
+			if(user !== null) { 
+				req.session.userId = user.id
+				return res.redirect('/chat')
+			} else {
+				req.flash('loginerror', 'Password or email is incorrect')
+				console.log('Something wrong. Did not find that user')
+				res.redirect('/login')
+			}
+		})
 	}
-	req.flash('loginerror', 'Password or email is incorrect')
-	console.log('Something wrong. Did not find that user')
-	res.redirect('/login')
 })
 
 app.post('/register', redirectHome, (req, res) => {
 	const { name, email, password } = req.body
 	if (name && email && password) {  //TODO: validation
-		const exists = users.some(
-			user => user.email === email
-		)
-		if (!exists) {
-			const user = {
-				id: users.length+1,
-				name,
-				email,
-				password // TODO: hash
+		Users.findOne({email}).then(user => {
+			console.log(user)
+			if (!user == null){
+				req.flash('registererror', 'This user already exists')
+				res.redirect('/register')
+			} else {
+				const user = {
+					name,
+					email,
+					password // TODO: hash
+				}
+
+				var newuser = new Users(user);
+				newuser.save(function (err, data) {
+			    	if (err) return console.error(err);
+			 	});
+				req.session.userId = newuser.id
+				console.log('the session user id in post register:  '+req.session.userId)
+				return res.redirect('/chat')
 			}
-			users.push(user)
-			req.session.userId = user.id
-			return res.redirect('/chat')
-		}
+		})
+	} else {
+		req.flash('registererror', 'Fill in all the fields')
+		res.redirect('/register') //TODO: qs /register?error=error.auth.userExists
 	}
-	req.flash('registererror', 'Fill in all the fields')
-	res.redirect('/register') //TODO: qs /register?error=error.auth.userExists
 })
 
 app.post('/logout', redirectLogin, (req, res) => {
