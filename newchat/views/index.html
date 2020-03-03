@@ -10,6 +10,9 @@
 			<div class='container flex-column flex-left'>
 				<h1>Quick Chat</h1>
 				<p class='light-text'>The easiest way to get your message across</p>
+				<% if(userId){ %>
+					<p style="color: gold">Have a great day: <strong style="color: #7CFC00">"<%=user.name%>"</strong></p>
+				<% } %>
 			</div>
 		</header>
 		
@@ -24,8 +27,8 @@
 						<button style='background-color: blue;'>Logout</button>
 					</form>
 			 		<% } else{ %>  
-			   			<a href="/login"><button>Login</button></a>
-						<a href="/register"><button style='background-color: blue;'>Register</button></a>
+			   			<a href="/login"><button style='background-color: orange;'>Login</button></a>
+						<a href="/register"><button style='background-color: #F08080;'>Register</button></a>
 				<% } %>				
 
 			</section>

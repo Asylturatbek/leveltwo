@@ -4,6 +4,7 @@ const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const bodyParser = require('body-parser')
 const session = require('express-session')
+const flash = require('connect-flash')
 
 const TWO_HOURS = 100 * 60 * 60 *2
 console.log(TWO_HOURS)
@@ -44,6 +45,9 @@ app.use(session({
 	}
 }))
 
+//flash middleware
+app.use(flash())
+
 // middleware function which gives access to authorized users to certain pages
 const redirectLogin = (req, res, next) => {
 	if (!req.session.userId) {
@@ -62,9 +66,10 @@ const redirectHome = (req, res, next) => {
 }
 
 app.get('/', (req, res) => {
-	const { userId } = req.session	
-	const okay = 'shess'
-	res.render('index', {userId, okay})
+	const { userId } = req.session
+	const user = users.find(user => user.id === req.session.userId)	
+
+	res.render('index', {userId, user})
 })
 
 app.get('/chat', redirectLogin, (req, res) => {
@@ -73,11 +78,11 @@ app.get('/chat', redirectLogin, (req, res) => {
 })
 
 app.get('/login', redirectHome, (req, res) => {
-	res.render('login') 
+	res.render('login', {errorinfo: req.flash('loginerror')}) 
 })
 
 app.get('/register', redirectHome, (req, res) => {
-	res.render('register')
+	res.render('register', {errorinfo: req.flash('registererror')})
 })
 
 app.post('/login', redirectHome, (req, res) => {
@@ -92,6 +97,7 @@ app.post('/login', redirectHome, (req, res) => {
 			return res.redirect('/chat')
 		}
 	}
+	req.flash('loginerror', 'Password or email is incorrect')
 	console.log('Something wrong. Did not find that user')
 	res.redirect('/login')
 })
@@ -114,6 +120,7 @@ app.post('/register', redirectHome, (req, res) => {
 			return res.redirect('/chat')
 		}
 	}
+	req.flash('registererror', 'Fill in all the fields')
 	res.redirect('/register') //TODO: qs /register?error=error.auth.userExists
 })
 
@@ -123,7 +130,7 @@ app.post('/logout', redirectLogin, (req, res) => {
 			return res.redirect('/chat')
 		}
 		res.clearCookie(SESS_NAME)
-		res.redirect('/login')
+		res.redirect('/')
 	})
 })
 

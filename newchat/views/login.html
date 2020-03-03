@@ -19,6 +19,7 @@
 			<section id="login" class=''>
 				<h2 class='text-center'>Login</h2>
 				<form action='/login' method='post' id="loginForm">
+					<h4 style='color: orange;'><%= errorinfo %></h4>
 					<input type="email" name="email" placeholder="Email">
 					<input type="password" name="password" placeholder="Password">
 					<button>Sign in</button>
