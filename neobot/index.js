@@ -1,13 +1,19 @@
 const TelegramBot = require('node-telegram-bot-api');
-const ogs = require('open-graph-scraper');
-const firebase = require('firebase');
-const bodyParser = require('body-parser')
 require('dotenv').config();
 const axios = require('axios')
 
 const bot = new TelegramBot(process.env.TELEGRAM_API_TOKEN, {polling: true});
 
 let siteUrl;
+
+bot.onText(/\/start/, (msg, match) => {
+	bot.sendMessage(msg.chat.id, `Welcome to the Neobot! It is a weather telling bot right now but 
+		we will add a lot of functionalities in future.
+		to know about options of weather enter /weather. 
+		To make bot speak enter /echo .... 
+		And to me to tell this again enter /start .
+		Have a good day my friend.`)
+})
 
 bot.onText(/\/weather/, (msg, match) => {
   siteUrl = match[1];
@@ -40,19 +46,6 @@ bot.onText(/\/echo (.+)/, (msg, match) => {
   // send back the matched "whatever" to the chat
   bot.sendMessage(chatId, resp);
 });
-
-// bot.on('message', (msg) => {
-//   bot.sendMessage(msg.chat.id,'Choose down the option', {
-//     reply_markup: {
-//       inline_keyboard: [[
-//         {
-//           text: 'Weather',
-//           callback_data: 'weather'
-//         },
-//       ]]
-//     }
-//   });
-// });
 
 bot.on("callback_query", (mesg) => {
 
@@ -95,24 +88,23 @@ bot.on("callback_query", (mesg) => {
 
 });
 
-let telegram_url = "https://api.telegram.org/bot" + process.env.TELEGRAM_API_TOKEN +"/sendMessage";
 let openWeatherUrl = process.env.OPENWEATHER_API_URL;
 
 function get_forecast(city){
     let new_url = openWeatherUrl + city+"&appid="+process.env.OPENWEATHER_API_KEY;
     return axios.get(new_url).then(response => {
+
         let temp = response.data.main.temp;
+        let feelslike = response.data.main.feels_like;
         //converts temperature from kelvin to celsuis
-        temp = Math.round(temp - 273.15); 
-        let city_name = response.data.name;
-        let resp = "It's "+temp+" degrees in "+city_name;
+        temp = Math.round(temp - 273.15);
+        feelslike = Math.round(feelslike - 273.15); 
+		let city_name = response.data.name;
+
+        let resp = `It's ${temp} degrees in ${city_name}
+        	But it feels like ${feelslike} degrees.`
         return resp;
     }).catch(error => {
         console.log(error);
     });
 }
-
-// get_forecast('Bishkek').then(result => {
-// 	console.log(result)
-// })
-
