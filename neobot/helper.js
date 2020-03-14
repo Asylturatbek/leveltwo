@@ -21,4 +21,31 @@ function get_forecast(city){
     });
 }
 
-module.exports = { get_forecast }
+
+let countries_url = 'https://restcountries.eu/rest/v2/name/'
+function get_info(name) {
+    return axios.get(countries_url+name).then(response => {
+        let countryname = response.data[0].name
+        let capital = response.data[0].capital
+        let region = response.data[0].region
+        let nativeName = response.data[0].nativeName
+        let flag_url = response.data[0].flag
+        let code = response.data[0].alpha2Code
+
+        let country = {
+            countryname : countryname,
+            capital : capital,
+            region : region,
+            nativeName : nativeName,
+            flag_url : flag_url,
+            code : code.toLowerCase()
+        }
+
+        return country
+
+    }).catch(error => {
+        console.log(error)
+    })
+}
+
+module.exports = { get_forecast, get_info }

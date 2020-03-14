@@ -1,16 +1,19 @@
 const TelegramBot = require('node-telegram-bot-api');
-let { get_forecast } = require('./helper.js')
+let { get_forecast, get_info } = require('./helper.js')
 
 
 const bot = new TelegramBot(process.env.TELEGRAM_API_TOKEN, {polling: true});
 
 let siteUrl;
 bot.onText(/\/start/, (msg, match) => {
-	bot.sendMessage(msg.chat.id, `Welcome to the Neobot! It is a weather telling bot right now but 
-		we will add a lot of functionalities in future.
-		to know about options of weather enter /weather. 
-		To make bot speak enter /echo .... 
-		And to me to tell this again enter /start .
+	bot.sendMessage(msg.chat.id, `***Welcome to the Neobot! It is a weather telling bot right now but 
+		***we will add a lot of functionalities in future.
+		***to know about options of weather enter /weather. 
+		***To make bot speak enter /echo .... 
+		ex: (/echo my name is Bot)
+		***To know the info of country enter /country_info ...
+		ex: (/country_info Kyrgyzstan)
+		***And to me to tell this again enter /start .
 		Have a good day my friend.`)
 })
 
@@ -50,5 +53,18 @@ bot.on("callback_query", (mesg) => {
 		console.log(err)
 	})
 
+});
+
+bot.onText(/\/country_info (.+)/, (msg, match) => {
+	const chatId = msg.chat.id;
+  	const search = match[1];
+  	console.log(search)
+  	get_info(search).then(result => {
+		bot.sendPhoto(chatId, 'https://www.worldometers.info/img/flags/'+result.code+'-flag.gif');
+  		bot.sendMessage(chatId, `${result.countryname} is the name of country
+  			It's capital is ${result.capital}
+  			Its is located on ${result.region} region
+  			It's native name is ${result.nativeName}`)
+  	})
 });
 
