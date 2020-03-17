@@ -14,6 +14,7 @@ bot.onText(/\/start/, (msg, match) => {
 		***To know the info of country enter /country_info ...
 		ex: (/country_info Kyrgyzstan)
 		***And to me to tell this again enter /start .
+		***To end the chat enter /end
 		Have a good day my friend.`)
 })
 
@@ -68,3 +69,11 @@ bot.onText(/\/country_info (.+)/, (msg, match) => {
   	})
 });
 
+
+bot.onText(/\/end/, (msg, match) => {
+	const chatId = msg.chat.id;
+	bot.sendMessage(chatId, `It's been wonderful time with you my friend
+		I hope you will visit me again soon.
+		Whenever you want you can call me again okay?
+		Bye bye!`)
+});
