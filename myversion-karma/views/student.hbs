@@ -1,0 +1,142 @@
+<div class="card">
+    <div class="control">
+        <div class="studentInfo">
+            <p class="studentParams">{{student.name}}</p>
+            <p class="studentParams">{{student.karma}}</p>
+        </div>
+        <p class="studentParams">Student: {{student.isStudent}}</p>
+        <p class="studentParams">TeamLead: {{student.isTeamLead}}</p>
+        {{#if student.isStudent}}
+        <form class="form"  action="/admin/makeTeamLead/{{student._id}}" method="GET">
+            <button class="btn3 btn-small blue accent-4">Make him TeamLead</button>
+        </form>
+        {{else}}
+        <form class="form"  action="/admin/makeStudentAgain/{{student._id}}" method="GET">
+            <button class="btn3 btn-small orange accent-4">Make him Student Again :)</button>
+        </form>
+        {{/if}}
+        <br>
+        <form class="form"  action="/admin/kickFromNeobis/{{student.email}}" method="GET">
+            <button class="btn3 btn-small red accent-4">Kick the fuck him out!</button>
+        </form>
+        <hr>
+
+        <div class="buttons center">
+            <form class="form"  action="">
+                <button class="btn3 btn-small purple accent-4">Keeping the kitchen dirty (-5)</button>
+            </form>
+            <form class="form"  action="">
+                <button class="btn3 btn-small purple accent-4">Crossing the line with shoes (-5)</button>
+            </form>
+            <form class="form"  action="">
+                <button class="btn3 btn-small purple accent-4">Missed report (-10)</button>
+            </form>
+            <form class="form"  action="">
+                <button class="btn3 btn-small purple accent-4">Ignoring cleaning task (-10)</button>
+            </form>
+            <form class="form"  action="">
+                <button class="btn3 btn-small purple accent-4">Missed deadline (-25)</button>
+            </form>
+        </div>
+
+        <div class="buttonsMore center">
+            <p class="moreButtonsText">Damaging Neobis property:</p>
+            <div class="buttonsMore1">
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small purple accent-4">-5</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small purple accent-4">-10</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small purple accent-4">-15</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small purple accent-4">-20</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small purple accent-4">-25</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small purple accent-4">-30</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small purple accent-4">-35</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small purple accent-4">-40</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small purple accent-4">-45</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small purple accent-4">-50</button>
+                </form>
+
+            </div>
+        </div>
+
+
+        <hr>
+
+        <div class="buttons center">
+            <form class="form"  action="">
+                <button class="btn3 btn-small blue darken-2">Organize presentation (+10)</button>
+            </form>
+            <form class="form" method="POST" action="/missedStandup">
+                <button class="btn3 btn-small blue darken-2">Organize meetup (+30)</button>
+            </form>
+        </div>
+
+        <div class="buttonsMore center">
+            <p class="moreButtonsText">Submit study plan earlier:</p>
+            <div class="buttonsMore1">
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small blue darken-2">+5</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small blue darken-2">+10</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small blue darken-2">+15</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small blue darken-2">+20</button>
+                </form>
+            </div>
+        </div>
+
+        <div class="buttonsMore center">
+            <p class="moreButtonsText">The longest chain of reports unmissed:</p>
+            <div class="buttonsMore1">
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small blue darken-2">+5</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small blue darken-2">+10</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small blue darken-2">+15</button>
+                </form>
+                <form class="form1"  action="">
+                    <button class="btn2 btn-small blue darken-2">+20</button>
+                </form>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="history center">
+        <p>Welcome to Neobis</p>
+        <p>Welcome to Neobis</p>
+        <p>Welcome to Neobis</p>
+        <p>Welcome to Neobis</p>
+        <p>Welcome to Neobis</p>
+        <p>Welcome to Neobis</p>
+        <p>Welcome to Neobis</p>
+        <p>Welcome to Neobis</p>
+        <p>Welcome to Neobis</p>
+        <p>Welcome to Neobis</p>
+        <p>Welcome to Neobis</p>
+    </div>
+</div>

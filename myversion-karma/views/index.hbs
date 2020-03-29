@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<div class="collection">
+{{#each messages}}
+    <a href="#!" class="collection-item">{{this}}</a>
+{{/each}}
+</div>
+<h3 class="center">Welcome to neobis!</h3>
+
+<div class="signinForm grey lighten-3">
+
+	
+	{{#if user}}
+	    <a href="#">
+	    	<button class="btn btn-small userChoise">Contact</button>
+	    </a>
+	    <a href="/student">
+	    	<button class="btn btn-small userChoise">Profile</button>
+	    </a>
+	{{else}}
+	    <a href="/loginstudent">
+	    	<button class="btn btn-small userChoise">For student</button>
+	    </a>
+	    <a href="/login">
+	    	<button class="btn btn-small userChoise">For teamleade</button>
+	    </a>
+	{{/if}}
+
+	
+</div>

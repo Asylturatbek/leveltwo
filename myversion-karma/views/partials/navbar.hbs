@@ -1,0 +1,11 @@
+<div class="navbar blue darken-2">
+    <a href="/" class="navlink"><b>Neobis</b></a>
+    {{#if user}}
+    	<a href="/departaments" class="navlink"><b>Department: {{user.department}}</b></a>
+    	<a href="#" class="navlink"><b>{{user.email}}</b></a>
+    	<a href="/users/logout" class="navlink"><b>Logout</b></a>
+  	{{/if}}
+    
+    <a href="#" class="navlink"></a>
+    
+</div>

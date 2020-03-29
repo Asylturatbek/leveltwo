@@ -1,0 +1,24 @@
+<div class="cards">
+    {{#each nodejs}}
+    <a href="/thisstudent/{{this._id}}" class="card1 center">
+        <div class="info">
+                <p>{{this.name}}</p>
+                <p>{{this.department}}</p>
+                <p>{{this.karma}}</p>
+        </div>
+        <div class="btns">
+            <div class="buttons1">
+                <button class="btn1 btn-small purple darken-2">-5</button>
+                <button class="btn1 btn-small purple darken-2">-10</button>
+                <button class="btn1 btn-small purple darken-2">-25</button>
+            </div>
+            <div class="buttons1">
+                <button class="btn1 btn-small blue darken-2">+5</button>
+                <button class="btn1 btn-small blue darken-2">+10</button>
+                <button class="btn1 btn-small blue darken-2">+30</button>
+            </div>
+        </div>    
+    </a>
+    
+    {{/each}}
+</div>

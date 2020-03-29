@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<div class="depList">
+	{{#each unique}}
+    <a class="dep" href="/dep/{{this.value}}">
+        <p>{{this.value}}</p>
+        <p>Members: {{this.count}}</p>
+    </a>
+    {{/each}}
+</div>
+
